@@ -116,6 +116,8 @@ def show_performance_imagenet_c(
             correct += pred.eq(target.cuda()).sum()
 
         errs.append(1 - 1.0 * correct / len(distorted_dataset))
+        break
 
+    errs = [err.cpu() for err in errs]
     logging.info("\n=Average", tuple(errs))
     return np.mean(errs)
