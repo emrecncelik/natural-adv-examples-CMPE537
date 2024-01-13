@@ -6,6 +6,7 @@ import torchvision.transforms as trn
 from torch.autograd import Variable as V
 import numpy as np
 import calibration_tools
+import logging
 
 from tqdm import tqdm
 from distutils.dir_util import copy_tree
@@ -88,8 +89,12 @@ def show_performance_imagenet_c(
     num_workers,
 ):
     errs = []
-
+    logging.info(
+        f"Evaluation for {distortion_name} ##########################################"
+    )
     for severity in range(1, 6):
+        logging.info(f"Severity {severity} ##########################################")
+
         distorted_dataset = dset.ImageFolder(
             root=data_path + distortion_name + "/" + str(severity),
             transform=trn.Compose([trn.ToTensor()]),
@@ -112,5 +117,5 @@ def show_performance_imagenet_c(
 
         errs.append(1 - 1.0 * correct / len(distorted_dataset))
 
-    print("\n=Average", tuple(errs))
+    logging.info("\n=Average", tuple(errs))
     return np.mean(errs)

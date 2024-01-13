@@ -10,6 +10,7 @@ import torchvision.models as models
 import torch.utils.model_zoo as model_zoo
 import torch.nn.functional as F
 import models_vit
+import logging
 
 # timm is needed for deit models
 import timm
@@ -120,6 +121,8 @@ def get_args():
 
 
 def main(args):
+    logging.basicConfig(level=logging.INFO, filename="onepeace_eval.log", filemode="w")
+
     # Set seed
     torch.manual_seed(1)
     np.random.seed(1)
@@ -213,13 +216,12 @@ def main(args):
                 args.num_workers,
             )
             error_rates.append(rate)
-            print(
+            logging.info(
                 "Distortion: {:15s}  | CE (unnormalized) (%): {:.2f}".format(
                     distortion_name, 100 * rate
                 )
             )
-
-        print(
+        logging.info(
             "mCE (unnormalized by AlexNet errors) (%): {:.2f}".format(
                 100 * np.mean(error_rates)
             )

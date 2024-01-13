@@ -1,5 +1,6 @@
 import numpy as np
 import sklearn.metrics as sk
+import logging
 import torch
 
 import torch.nn.functional as F
@@ -130,22 +131,22 @@ def tune_temp(logits, labels, binary_search=True, lower=0.2, upper=5.0, eps=0.00
 
 
 def print_measures(rms, aurra_metric, mad, sf1, method_name="Baseline"):
-    print("\t\t\t\t\t\t\t" + method_name)
-    print("RMS Calib Error (%): \t\t{:.2f}".format(100 * rms))
-    print("AURRA (%): \t\t\t{:.2f}".format(100 * aurra))
+    logging.info("\t\t\t\t\t\t\t" + method_name)
+    logging.info("RMS Calib Error (%): \t\t{:.2f}".format(100 * rms))
+    logging.info("AURRA (%): \t\t\t{:.2f}".format(100 * aurra))
     # print('MAD Calib Error (%): \t\t{:.2f}'.format(100 * mad))
     # print('Soft F1 Score (%):   \t\t{:.2f}'.format(100 * sf1))
 
 
 def show_calibration_results(confidence, correct, method_name="Baseline"):
-    print("\t\t\t\t" + method_name)
-    print(
+    logging.info("\t\t\t\t" + method_name)
+    logging.info(
         "RMS Calib Error (%): \t\t{:.2f}".format(
             100 * calib_err(confidence, correct, p="2")
         )
     )
 
-    print("AURRA (%): \t\t\t{:.2f}".format(100 * aurra(confidence, correct)))
+    logging.info("AURRA (%): \t\t\t{:.2f}".format(100 * aurra(confidence, correct)))
 
     # print('MAD Calib Error (%): \t\t{:.2f}'.format(
     #     100 * calib_err(confidence, correct, p='1')))
@@ -224,27 +225,27 @@ def get_measures(_pos, _neg, recall_level=recall_level_default):
 def print_measures_old(
     auroc, aupr, fpr, method_name="Ours", recall_level=recall_level_default
 ):
-    print("\t\t\t" + method_name)
-    print("FPR{:d}:\t{:.2f}".format(int(100 * recall_level), 100 * fpr))
-    print("AUROC: \t{:.2f}".format(100 * auroc))
-    print("AUPR:  \t{:.2f}".format(100 * aupr))
+    logging.info("\t\t\t" + method_name)
+    logging.info("FPR{:d}:\t{:.2f}".format(int(100 * recall_level), 100 * fpr))
+    logging.info("AUROC: \t{:.2f}".format(100 * auroc))
+    logging.info("AUPR:  \t{:.2f}".format(100 * aupr))
 
 
 def print_measures_with_std(
     aurocs, auprs, fprs, method_name="Ours", recall_level=recall_level_default
 ):
-    print("\t\t\t" + method_name)
-    print(
+    logging.info("\t\t\t" + method_name)
+    logging.info(
         "FPR{:d}:\t{:.2f}\t+/- {:.2f}".format(
             int(100 * recall_level), 100 * np.mean(fprs), 100 * np.std(fprs)
         )
     )
-    print(
+    logging.info(
         "AUROC: \t{:.2f}\t+/- {:.2f}".format(
             100 * np.mean(aurocs), 100 * np.std(aurocs)
         )
     )
-    print(
+    logging.info(
         "AUPR:  \t{:.2f}\t+/- {:.2f}".format(100 * np.mean(auprs), 100 * np.std(auprs))
     )
 
