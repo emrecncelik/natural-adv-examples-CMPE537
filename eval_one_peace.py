@@ -214,6 +214,7 @@ def main(args):
                 model,
                 args.batch_size,
                 args.num_workers,
+                args.input_size,
             )
             error_rates.append(rate)
             logging.info(

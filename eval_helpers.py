@@ -82,11 +82,7 @@ def get_imagenet_o_results(in_loader, out_loader, net, mask):
 
 
 def show_performance_imagenet_c(
-    distortion_name,
-    data_path,
-    model,
-    batch_size,
-    num_workers,
+    distortion_name, data_path, model, batch_size, num_workers, input_size
 ):
     errs = []
     logging.info(
@@ -97,7 +93,9 @@ def show_performance_imagenet_c(
 
         distorted_dataset = dset.ImageFolder(
             root=data_path + distortion_name + "/" + str(severity),
-            transform=trn.Compose([trn.ToTensor()]),
+            transform=trn.Compose(
+                [trn.Resize((input_size, input_size)), trn.ToTensor()]
+            ),
         )
 
         distorted_dataset_loader = torch.utils.data.DataLoader(
