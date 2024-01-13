@@ -1,5 +1,9 @@
 import numpy as np
 import sklearn.metrics as sk
+import torch
+
+import torch.nn.functional as F
+import cvxpy as cx
 
 recall_level_default = 0.95
 
@@ -86,9 +90,6 @@ def tune_temp(logits, labels, binary_search=True, lower=0.2, upper=5.0, eps=0.00
     logits = np.array(logits)
 
     if binary_search:
-        import torch
-        import torch.nn.functional as F
-
         logits = torch.FloatTensor(logits)
         labels = torch.LongTensor(labels)
         t_guess = torch.FloatTensor([0.5 * (lower + upper)]).requires_grad_()
@@ -110,8 +111,6 @@ def tune_temp(logits, labels, binary_search=True, lower=0.2, upper=5.0, eps=0.00
             key=lambda x: float(F.cross_entropy(logits / x, labels)),
         )
     else:
-        import cvxpy as cx
-
         set_size = np.array(logits).shape[0]
 
         t = cx.Variable()
@@ -269,3 +268,11 @@ def get_and_print_results(out_score, in_score, num_to_avg=1):
     # else:
     #    print_measures(auroc, aupr, fpr, method_name='Ours')
     return auroc, aupr, fpr
+
+
+def auc(errs):  # area under the distortion-error curve
+    area = 0
+    for i in range(1, len(errs)):
+        area += (errs[i] + errs[i - 1]) / 2
+    area /= len(errs) - 1
+    return area
