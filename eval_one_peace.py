@@ -167,7 +167,7 @@ def main(args):
 
     # Load & configure model
     model = models_vit.__dict__[args.model_name](
-        num_classes=args.nbclasses,
+        num_classes=args.nb_classes,
         drop_path_rate=args.drop_path,
         dropout=args.dropout,
         global_pool=args.global_pool,
