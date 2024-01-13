@@ -228,8 +228,12 @@ def main(args):
         )
     elif args.data_name == "imagenet-p":
         pass
-
     # print("ImageNet-A Results")
     # get_imagenet_a_results(nae_loader, net=net, mask=imagenet_a_mask)
 
     # print("\n\n\n")
+
+
+if __name__ == "__main__":
+    args = get_args()
+    main(args)
