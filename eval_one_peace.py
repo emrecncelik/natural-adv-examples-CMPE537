@@ -50,7 +50,7 @@ def get_args():
         help="Path of model to eval",
     )
     parser.add_argument(
-        "--model",
+        "--model_name",
         default="one_piece_g_384",
         type=str,
         help="Name of model to eval",
