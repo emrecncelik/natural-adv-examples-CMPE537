@@ -90,7 +90,7 @@ def show_performance_imagenet_c(
     logging.info(
         f"Evaluation for {distortion_name} ##########################################"
     )
-    for severity in range(1, 6):
+    for severity in range(1, 6, 2):
         logging.info(f"Severity {severity} ##########################################")
 
         distorted_dataset = dset.ImageFolder(
@@ -116,7 +116,6 @@ def show_performance_imagenet_c(
             correct += pred.eq(target.cuda()).sum()
 
         errs.append(1 - 1.0 * correct / len(distorted_dataset))
-        break
 
     errs = [err.cpu() for err in errs]
     logging.info("\n=Average", tuple(errs))
