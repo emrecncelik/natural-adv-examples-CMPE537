@@ -7,6 +7,7 @@ import torch.nn.functional as F
 import cvxpy as cx
 
 recall_level_default = 0.95
+logging.basicConfig(level=logging.INFO, filename="onepeace_eval.log", filemode="w")
 
 
 def stable_cumsum(arr, rtol=1e-05, atol=1e-08):

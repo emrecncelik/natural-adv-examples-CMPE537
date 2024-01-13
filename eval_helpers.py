@@ -11,6 +11,8 @@ import logging
 from tqdm import tqdm
 from distutils.dir_util import copy_tree
 
+logging.basicConfig(level=logging.INFO, filename="onepeace_eval.log", filemode="w")
+
 
 def concat(x):
     np.concatenate(x, axis=0)
