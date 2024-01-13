@@ -183,7 +183,7 @@ def main(args):
     model.eval()
 
     if args.data_name == "imagenet-c":
-        from calibration_tools import show_performance_imagenet_c
+        from eval_helpers import show_performance_imagenet_c
 
         distortions = [
             "gaussian_noise",
