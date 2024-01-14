@@ -227,10 +227,6 @@ def main(args):
                 100 * np.mean(error_rates)
             )
         )
-    elif args.data_name == "imagenet-a":
-        pass
-    elif args.data_name == "imagenet-sketch":
-        pass
     elif args.data_name in ["imagenet-r", "imagenet-sketch", "imagenet-a"]:
         from wnids import all_wnids
         from eval_helpers import get_imagenet_a_results
