@@ -248,7 +248,7 @@ def main(args):
             batch_size=args.batch_size,
             shuffle=False,
             num_workers=args.num_workers,
-            pin_memory=args.pin_memory,
+            pin_memory=args.pin_mem,
         )
         logging.info(f"ImageNet-X results ({args.data_name})")
         get_imagenet_a_results(imagenet_x_loader, net=model, mask=imagenet_x_mask)
