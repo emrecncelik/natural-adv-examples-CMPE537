@@ -129,6 +129,23 @@ def main(args):
     torch.cuda.manual_seed(1)
     cudnn.benchmark = True
 
+    # Load & configure model
+    model = models_vit.__dict__[args.model_name](
+        num_classes=args.nb_classes,
+        drop_path_rate=args.drop_path,
+        dropout=args.dropout,
+        global_pool=args.global_pool,
+        use_checkpoint=True,
+    )
+
+    device = torch.device("cuda")
+    model.to(device)
+    checkpoint = torch.load(args.model_path, map_location="cpu")
+    model.load_state_dict(checkpoint["model"])
+
+    model.cuda()
+    model.eval()
+
     # test_transform = trn.Compose(
     #     [trn.Resize((args.input_size, args.input_size)), trn.ToTensor()]
     # )
@@ -164,23 +181,6 @@ def main(args):
     # val_imagenet_loader = torch.utils.data.DataLoader(
     #     val_imagenet, batch_size=32, shuffle=False, num_workers=4, pin_memory=True
     # )
-
-    # Load & configure model
-    model = models_vit.__dict__[args.model_name](
-        num_classes=args.nb_classes,
-        drop_path_rate=args.drop_path,
-        dropout=args.dropout,
-        global_pool=args.global_pool,
-        use_checkpoint=True,
-    )
-
-    device = torch.device("cuda")
-    model.to(device)
-    checkpoint = torch.load(args.model_path, map_location="cpu")
-    model.load_state_dict(checkpoint["model"])
-
-    model.cuda()
-    model.eval()
 
     if args.data_name == "imagenet-c":
         from eval_helpers import show_performance_imagenet_c
@@ -227,8 +227,32 @@ def main(args):
                 100 * np.mean(error_rates)
             )
         )
-    elif args.data_name == "imagenet-p":
+    elif args.data_name == "imagenet-a":
         pass
+    elif args.data_name == "imagenet-sketch":
+        pass
+    elif args.data_name in ["imagenet-r", "imagenet-sketch", "imagenet-a"]:
+        from wnids import all_wnids
+        from eval_helpers import get_imagenet_a_results
+
+        transform = trn.Compose(
+            [trn.Resize((args.input_size, args.input_size)), trn.ToTensor()]
+        )
+
+        imagenet_x_wnids = os.listdir(args.data_path)
+        imagenet_x_mask = [wnid in set(imagenet_x_wnids) for wnid in all_wnids]
+
+        imagenet_x = dset.ImageFolder(root=args.data_path, transform=transform)
+        imagenet_x_loader = torch.utils.data.DataLoader(
+            imagenet_x,
+            batch_size=args.batch_size,
+            shuffle=False,
+            num_workers=args.num_workers,
+            pin_memory=args.pin_memory,
+        )
+        logging.info(f"ImageNet-X results ({args.data_name})")
+        get_imagenet_a_results(imagenet_x_loader, net=model, mask=imagenet_x_mask)
+
     # print("ImageNet-A Results")
     # get_imagenet_a_results(nae_loader, net=net, mask=imagenet_a_mask)
 
