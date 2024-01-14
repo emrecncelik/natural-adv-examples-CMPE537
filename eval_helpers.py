@@ -117,6 +117,6 @@ def show_performance_imagenet_c(
 
         errs.append(1 - 1.0 * correct / len(distorted_dataset))
 
-    errs = [err.cpu() for err in errs]
+    errs = [to_np(err) for err in errs]
     logging.info("\n=Average", tuple(errs))
     return np.mean(errs)
